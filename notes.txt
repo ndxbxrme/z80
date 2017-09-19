@@ -1,0 +1,15 @@
+ROM routines
+
+write string
+	ld de, string
+	ld bc, eostring-string
+	call 8252
+
+write number (<9999)
+	ld bc, (score)
+	call 6683
+
+write number (<65535)
+	ld bc, (score)
+	call 11563
+	call 11747

@@ -35,9 +35,9 @@ ploop	ld hl, paddr
 	ld a, (hl)
 	cp 112
 	jr z, pright
-	cp 110
-	jr z, pleft
 	cp 111
+	jr z, pleft
+	cp 110
 	jp z, pdrop
 	jr ploop
 pright	ld a, (ppos)
@@ -62,11 +62,54 @@ pleft	ld a, (ppos)
 	dec a
 	ld (ppos), a
 	jp clrkey
-pdrop	ld a, (ppos)
-	ld hl, paddr
+pdrop	ld hl, paddr
 	ld bc, (ppos)
 	add hl, bc
-	ld (hl), 63
+	ld b, 6
+dloop	push bc
+	push hl
+	ld bc, 32
+	add hl, bc
+	ld a, (hl)
+	cp 15
+	jp nz, clrkey
+	pop hl
+	ld a, 15
+	ld (hl), a
+	add hl, bc
+	ld a, (pcol + 1)
+	ld (hl), a
+	pop bc
+	djnz dloop
+	ld hl, p1col
+	ld a, (hl)
+	ld hl, pcol
+	ld b, (hl)
+	cp b
+	jr nz, p1up
+	jr p2up
+	jp clrkey
+p1up	ld hl, p1col
+	ld a, "1"
+	rst 16
+	ld b, (hl)
+	inc hl
+	ld c, (hl)
+	ld hl, pcol
+	ld (hl), b
+	inc hl
+	ld (hl), c
+	jp clrkey
+p2up	ld hl, p2col
+	ld a, "2"
+	rst 16
+	ld b, (hl)
+	inc hl
+	ld c, (hl)
+	ld hl, pcol
+	ld (hl), b
+	inc hl
+	ld (hl), c
 	jp clrkey
 clrkey	ld hl, last_k
 	ld (hl), 0
@@ -82,5 +125,7 @@ board	defb 12, 17, 1, 16, 7, 144, 144, 144, 144, 144, 144, 144
 eoboard	equ $
 ppos	defb 15, 0
 pcol	defb 58, 10
+p1col	defb 58, 10
+p2col	defb 62, 14
 udgs	defb 0, 24, 60, 126, 126, 60, 24, 0
 	
