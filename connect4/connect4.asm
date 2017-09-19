@@ -35,8 +35,10 @@ ploop	ld hl, paddr
 	ld a, (hl)
 	cp 112
 	jr z, pright
-	cp 111
+	cp 110
 	jr z, pleft
+	cp 111
+	jp z, pdrop
 	jr ploop
 pright	ld a, (ppos)
 	cp 18
@@ -59,6 +61,12 @@ pleft	ld a, (ppos)
 	ld a, (ppos)
 	dec a
 	ld (ppos), a
+	jp clrkey
+pdrop	ld a, (ppos)
+	ld hl, paddr
+	ld bc, (ppos)
+	add hl, bc
+	ld (hl), 63
 	jp clrkey
 clrkey	ld hl, last_k
 	ld (hl), 0
